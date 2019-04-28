@@ -3,11 +3,18 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-	public const int WIDTH = 10, HEIGHT = 10, CORRIDOR_WIDTH = 2, CORRIDOR_LENGTH = 2;
-	private RoomType type = RoomType.Monsters;
-	private List<Tile> tiles = new List<Tile>();
+	public const int WIDTH = 11, HEIGHT = 11, CORRIDOR_WIDTH = 3, CORRIDOR_LENGTH = 3;
+	private RoomType type = RoomType.Empty;
 	private Vector2 position;
-	[SerializeField] private Tile tilePrefab, wallPrefab;
+	[SerializeField] private Tile tilePrefab;
+	[SerializeField] private Tile
+		ulInnerWallPrefab, ulOuterWallPrefab, uWallPrefab, urInnerWallPrefab, urOuterWallPrefab,
+		lWallPrefab, rWallPrefab,
+		dlInnerWallPrefab, dlOuterWallPrefab, dWallPrefab, drInnerWallPrefab, drOuterWallPrefab;
+	[SerializeField] private Ladder ladderPrefab;
+	[SerializeField] private Shop shopPrefab;
+	[SerializeField] private List<Enemy> enemies;
+	[SerializeField] private IntPair enemySpawnAmount = new IntPair(1, 6);
 	private RoomData data;
 
 	private int CorridorWidthOffset { get { return WIDTH / 2 - CORRIDOR_WIDTH / 2; } }
@@ -27,7 +34,41 @@ public class Room : MonoBehaviour
 	private void Start()
 	{
 		CreateTiles();
-		CreateWalls();
+		switch (type)
+		{
+			case RoomType.Monsters:
+				int randomCount = Random.Range(enemySpawnAmount.x,
+					Mathf.Min(GameController.difficulty - 5, enemySpawnAmount.y + 1));
+				for (int i = 0; i < randomCount; i++)
+				{
+					int randomEnemy = Random.Range(0, enemies.Count);
+					Enemy enemy = Instantiate(enemies[randomEnemy]);
+					enemy.transform.parent = transform;
+					enemy.transform.localPosition = GetPosition(
+						new IntPair(Random.Range(1, WIDTH), Random.Range(1, HEIGHT)));
+				}
+				break;
+			case RoomType.Shop:
+				Shop shop = Instantiate(shopPrefab);
+				shop.transform.parent = transform;
+				Vector2 shopPos = GetPosition(
+					new IntPair(WIDTH - 3, HEIGHT));
+				shopPos.x += Tile.WIDTH / 2f;
+				shop.transform.localPosition = shopPos;
+				break;
+			case RoomType.Treasure:
+				break;
+			case RoomType.Puzzle:
+				break;
+			case RoomType.End:
+				Ladder ladder = Instantiate(ladderPrefab);
+				ladder.transform.parent = transform;
+				ladder.transform.localPosition = GetPosition(
+					new IntPair((int)(WIDTH / 2f), (int)(HEIGHT / 2f)));
+				break;
+			case RoomType.Empty:
+				break;
+		}
 	}
 
 	private void CreateTiles()
@@ -40,50 +81,66 @@ public class Room : MonoBehaviour
 				CreateTile(tilePrefab, coordinates);
 
 				if (i == 0
-					&& (j < CorridorHeightOffset
-					|| j >= CorridorHeightOffset + CORRIDOR_WIDTH
+					&& (j < CorridorHeightOffset - 1
+					|| j >= CorridorHeightOffset + CORRIDOR_WIDTH + 1
 					|| !data.leftExit))
 				{
 					coordinates.x -= 1;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(lWallPrefab, coordinates);
+					if (j == 0)
+					{
+						coordinates.y -= 1;
+						CreateTile(dlInnerWallPrefab, coordinates);
+					}
+					else if (j == HEIGHT - 1)
+					{
+						coordinates.y += 1;
+						CreateTile(ulInnerWallPrefab, coordinates);
+					}
 				}
 				if (i == WIDTH - 1
-					&& (j < CorridorHeightOffset
-					|| j >= CorridorHeightOffset + CORRIDOR_WIDTH
+					&& (j < CorridorHeightOffset - 1
+					|| j >= CorridorHeightOffset + CORRIDOR_WIDTH + 1
 					|| !data.rightExit))
 				{
 					coordinates.x += 1;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(rWallPrefab, coordinates);
+					if (j == 0)
+					{
+						coordinates.y -= 1;
+						CreateTile(drInnerWallPrefab, coordinates);
+					}
+					else if (j == HEIGHT - 1)
+					{
+						coordinates.y += 1;
+						CreateTile(urInnerWallPrefab, coordinates);
+					}
 				}
 				coordinates.x = i;
+				coordinates.y = j;
 				if (j == 0
-					&& (i < CorridorWidthOffset
-					|| i >= CorridorWidthOffset + CORRIDOR_WIDTH
+					&& (i < CorridorWidthOffset - 1
+					|| i >= CorridorWidthOffset + CORRIDOR_WIDTH + 1
 					|| !data.downExit))
 				{
 					coordinates.y -= 1;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(dWallPrefab, coordinates);
 				}
 				if (j == HEIGHT - 1
-					&& (i < CorridorWidthOffset
-					|| i >= CorridorWidthOffset + CORRIDOR_WIDTH
+					&& (i < CorridorWidthOffset - 1
+					|| i >= CorridorWidthOffset + CORRIDOR_WIDTH + 1
 					|| !data.upExit))
 				{
 					coordinates.y += 1;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(uWallPrefab, coordinates);
 				}
 			}
 		}
-
+		
 		CreateCorridor(left: data.leftExit);
 		CreateCorridor(up: data.upExit);
 		CreateCorridor(right: data.rightExit);
 		CreateCorridor(down: data.downExit);
-	}
-
-	private void CreateWalls()
-	{
-
 	}
 
 	private void CreateCorridor(
@@ -114,27 +171,35 @@ public class Room : MonoBehaviour
 					coordinates.x = CorridorWidthOffset + i;
 					coordinates.y = -1 - j;
 				}
-				CreateTile(tilePrefab, coordinates);
+				if (left || up || right || down)
+				{
+					CreateTile(tilePrefab, coordinates);
+				}
 
-				if ((left || right) && i == 0 && j > 0)
+				if ((left || right) && i == 0)
 				{
 					coordinates.y--;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(
+						left ? (j == 0 ? urOuterWallPrefab : dWallPrefab)
+						: (j == 0 ? ulOuterWallPrefab : dWallPrefab), coordinates);
 				}
-				if ((left || right) && i == CORRIDOR_WIDTH - 1 && j > 0)
+				if ((left || right) && i == CORRIDOR_WIDTH - 1)
 				{
 					coordinates.y++;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(left ? (j == 0 ? drOuterWallPrefab : uWallPrefab)
+						: (j == 0 ? dlOuterWallPrefab : uWallPrefab), coordinates);
 				}
-				if ((up || down) && i == 0 && j > 0)
+				if ((up || down) && i == 0)
 				{
 					coordinates.x--;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(up ? (j == 0 ? drOuterWallPrefab : lWallPrefab)
+						: (j == 0 ? urOuterWallPrefab : lWallPrefab), coordinates);
 				}
-				if ((up || down) && i == CORRIDOR_WIDTH - 1 && j > 0)
+				if ((up || down) && i == CORRIDOR_WIDTH - 1)
 				{
 					coordinates.x++;
-					CreateTile(wallPrefab, coordinates);
+					CreateTile(up ? (j == 0 ? dlOuterWallPrefab : rWallPrefab)
+						: (j == 0 ? ulOuterWallPrefab : rWallPrefab), coordinates);
 				}
 			}
 		}

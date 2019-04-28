@@ -45,5 +45,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilePrefab: {fileID: 7071161858763845141, guid: cffacdea94afca54a942a938551fc139,
     type: 3}
-  wallPrefab: {fileID: 8642473732864122075, guid: 8fd5a75c252c90941913dc291349dd83,
+  ulInnerWallPrefab: {fileID: 8642473732864122075, guid: 8fd5a75c252c90941913dc291349dd83,
     type: 3}
+  ulOuterWallPrefab: {fileID: 8642473732864122075, guid: 35f944a4373b40246bd782b38f4c9145,
+    type: 3}
+  uWallPrefab: {fileID: 8642473732864122075, guid: 03e236899a3187342bf95aebaf05e286,
+    type: 3}
+  urInnerWallPrefab: {fileID: 8642473732864122075, guid: 787581f6dadc64246afd926f271070eb,
+    type: 3}
+  urOuterWallPrefab: {fileID: 8642473732864122075, guid: 3f6d8b0de637d254b9c17845bbfefbbe,
+    type: 3}
+  lWallPrefab: {fileID: 8642473732864122075, guid: 75d7ea95c0aaeda4498ee892db04a35c,
+    type: 3}
+  rWallPrefab: {fileID: 8642473732864122075, guid: 0f20e1731add20c4abf92565a11562d2,
+    type: 3}
+  dlInnerWallPrefab: {fileID: 8642473732864122075, guid: 10d46549330191a4ebedb343004c6d70,
+    type: 3}
+  dlOuterWallPrefab: {fileID: 8642473732864122075, guid: c35f498b604a85742801a61d6058f372,
+    type: 3}
+  dWallPrefab: {fileID: 8642473732864122075, guid: ea27ade4908c6cd4ebda63d7f0f346af,
+    type: 3}
+  drInnerWallPrefab: {fileID: 8642473732864122075, guid: 290a1aea6b48d1148b976456836cd6b7,
+    type: 3}
+  drOuterWallPrefab: {fileID: 8642473732864122075, guid: c0d94c61afe03c948b1816cc0b6ba873,
+    type: 3}
+  ladderPrefab: {fileID: 428834989999003429, guid: 12478eb85e0cac443b92ba03aaa48f01,
+    type: 3}
+  shopPrefab: {fileID: 8064304660864001746, guid: d453c590ab2f9c445b76b0503707b5b1,
+    type: 3}
+  enemies:
+  - {fileID: 3184515479901401154, guid: b12867a3812d25c47acc0a99e4e29994, type: 3}
+  enemySpawnAmount:
+    x: 1
+    y: 6

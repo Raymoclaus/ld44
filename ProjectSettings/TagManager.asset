@@ -13,8 +13,8 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
+  - Player
+  - Shop
   - 
   - 
   - 
@@ -43,6 +43,9 @@ TagManager:
     locked: 0
   - name: Ground
     uniqueID: 1474860691
+    locked: 0
+  - name: AboveGround
+    uniqueID: 915441499
     locked: 0
   - name: Player
     uniqueID: 1857775383

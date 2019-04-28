@@ -4,7 +4,7 @@ using UnityEngine;
 public class DungeonGenerator : MonoBehaviour
 {
 	private List<List<RoomData>> dataList = new List<List<RoomData>>();
-	public RoomData firstRoom;
+	public RoomData firstRoom, endRoom;
 	private List<Room> rooms = new List<Room>();
 	[SerializeField] private Room roomPrefab;
 	private Transform roomHolder;
@@ -12,6 +12,10 @@ public class DungeonGenerator : MonoBehaviour
 	public int minRooms = 10;
 	private int maxRooms { get { return (int)((float)minRooms * 1.5f); } }
 	private int roomCount;
+	[SerializeField] private int numEndRooms = 1, numShopRooms = 1;
+	[SerializeField]
+	private float monsterRoomChance = 0.5f, treasureRoomChance = 0.1f,
+		puzzleRoomChance = 0.1f;
 
 	private bool RandomBool { get { return Random.value > 0.5f; } }
 
@@ -22,11 +26,6 @@ public class DungeonGenerator : MonoBehaviour
 	public static float CELL_HEIGHT
 	{
 		get { return (Room.HEIGHT + Room.CORRIDOR_LENGTH * 2) * Tile.HEIGHT; }
-	}
-
-	private void Start()
-	{
-		GenerateDungeon();
 	}
 
 	public void GenerateDungeon()
@@ -41,6 +40,17 @@ public class DungeonGenerator : MonoBehaviour
 		} while (CountDataList() < minRooms || CountDataList() > maxRooms);
 
 		CleanupCorridors();
+
+		SetRoomTypes();
+
+		//for (int i = 0; i < dataList.Count; i++)
+		//{
+		//	for (int j = 0; j < dataList[i].Count; j++)
+		//	{
+		//		if (dataList[i][j] == null) continue;
+		//		Debug.Log(dataList[i][j].type);
+		//	}
+		//}
 
 		if (roomHolder != null)
 		{
@@ -169,6 +179,56 @@ public class DungeonGenerator : MonoBehaviour
 				newRoom.transform.parent = roomHolder;
 				newRoom.SetData(currentRoom);
 				rooms.Add(newRoom);
+			}
+		}
+	}
+
+	private void SetRoomTypes()
+	{
+		List<RoomData> rooms = new List<RoomData>();
+		for (int i = 0; i < dataList.Count; i++)
+		{
+			for (int j = 0; j < dataList[i].Count; j++)
+			{
+				if (dataList[i][j] == firstRoom || dataList[i][j] == null) continue;
+				rooms.Add(dataList[i][j]);
+			}
+		}
+
+		int random = 0;
+		for (int i = 0; i < numEndRooms; i++)
+		{
+			random = Random.Range(0, rooms.Count);
+			rooms[random].type = RoomType.End;
+			endRoom = rooms[random];
+			rooms.RemoveAt(random);
+		}
+		for (int i = 0; i < numShopRooms; i++)
+		{
+			random = Random.Range(0, rooms.Count);
+			rooms[random].type = RoomType.Shop;
+			rooms.RemoveAt(random);
+		}
+
+		for (int i = 0; i < rooms.Count; i++)
+		{
+			float randomVal = Random.value;
+			if (randomVal < monsterRoomChance)
+			{
+				rooms[i].type = RoomType.Monsters;
+				continue;
+			}
+			randomVal -= monsterRoomChance;
+			if (randomVal < treasureRoomChance)
+			{
+				rooms[i].type = RoomType.Treasure;
+				continue;
+			}
+			randomVal -= treasureRoomChance;
+			if (randomVal < puzzleRoomChance)
+			{
+				rooms[i].type = RoomType.Puzzle;
+				continue;
 			}
 		}
 	}
@@ -306,5 +366,13 @@ public class DungeonGenerator : MonoBehaviour
 		int y = roomData.coordinates.y;
 		return new Vector2(x * CELL_WIDTH + CELL_WIDTH / 2f - Room.CORRIDOR_LENGTH * Tile.WIDTH - Tile.WIDTH / 2f,
 			y * CELL_HEIGHT + CELL_HEIGHT / 2f - Room.CORRIDOR_LENGTH * Tile.HEIGHT - Tile.HEIGHT);
+	}
+
+	public Vector2 GetBottom(RoomData roomData)
+	{
+		int x = roomData.coordinates.x;
+		int y = roomData.coordinates.y;
+		return new Vector2(x * CELL_WIDTH + CELL_WIDTH / 2f - Room.CORRIDOR_LENGTH * Tile.WIDTH - Tile.WIDTH / 2f,
+			y * CELL_HEIGHT + 2 - Tile.HEIGHT);
 	}
 }

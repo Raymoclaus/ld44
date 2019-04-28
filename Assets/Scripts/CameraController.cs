@@ -2,10 +2,10 @@
 
 public class CameraController : MonoBehaviour
 {
-	private Movement player;
-	private Movement Player
+	private Player player;
+	private Player Player
 	{
-		get { return player ?? (player = FindObjectOfType<Movement>()); }
+		get { return player ?? (player = FindObjectOfType<Player>()); }
 	}
 	
 	void Update()

@@ -1,4 +1,5 @@
-﻿public struct IntPair
+﻿[System.Serializable]
+public struct IntPair
 {
 	public int x, y;
 
