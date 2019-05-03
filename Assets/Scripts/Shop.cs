@@ -19,6 +19,7 @@ public class Shop : MonoBehaviour
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
 			playerNearby = true;
+			GameController.ActivateInteractIcon(true);
 		}
 	}
 
@@ -27,12 +28,13 @@ public class Shop : MonoBehaviour
 		if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
 		{
 			playerNearby = false;
+			GameController.ActivateInteractIcon(false);
 		}
 	}
 
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.E) && !ShopUI.IsTransitioning)
+		if (Input.GetKeyDown(KeyCode.E) && !ShopUI.IsTransitioning && playerNearby)
 		{
 			ShopUI.Activate();
 		}

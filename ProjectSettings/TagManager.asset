@@ -15,8 +15,8 @@ TagManager:
   - 
   - Player
   - Shop
-  - 
-  - 
+  - Attack
+  - Enemy
   - 
   - 
   - 
@@ -49,4 +49,7 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 1857775383
+    locked: 0
+  - name: UI
+    uniqueID: 3425066885
     locked: 0

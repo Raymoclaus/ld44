@@ -35,9 +35,15 @@ public class ShopUI : MonoBehaviour
 		CGroup.alpha = 0f;
 	}
 
+	private void OnDestroy()
+	{
+		instance = null;
+	}
+
 	private void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.Escape) && !IsTransitioning)
+		if ((Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.E))
+			&& !IsTransitioning && activated)
 		{
 			Deactivate();
 		}
@@ -46,11 +52,13 @@ public class ShopUI : MonoBehaviour
 	public static void Activate()
 	{
 		Instance.StartCoroutine(Instance.SlideIn(true));
+		GameController.ActivateEscToPauseCanvas(false);
 	}
 
 	private void Deactivate()
 	{
 		Instance.StartCoroutine(Instance.SlideIn(false));
+		GameController.ActivateEscToPauseCanvas(true);
 	}
 
 	private IEnumerator SlideIn(bool enter)

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3184515479901401157}
   - component: {fileID: 3184515479901401155}
   - component: {fileID: 3184515479901401154}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,8 +146,8 @@ Rigidbody2D:
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &3184515479901401154
 MonoBehaviour:
@@ -165,5 +165,7 @@ MonoBehaviour:
   sprRend: {fileID: 3184515479901401159}
   playerDetectionRadius: 5
   speedMultiplier: 2
+  timerRewardOnHit: 2
+  attackDamage: 1
   anim: {fileID: 3184515479901401158}
-  timerRewardOnHit: 1
+  col: {fileID: 3184515479901401157}

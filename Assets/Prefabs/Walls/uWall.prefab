@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1885728994569367008}
   - component: {fileID: 141763914947470309}
   - component: {fileID: 8642473732864122075}
+  - component: {fileID: 4489489708963464141}
   m_Layer: 0
   m_Name: uWall
   m_TagString: Untagged
@@ -121,3 +122,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprites:
   - {fileID: 21300032, guid: ae3f7a85d28964e459fc6af84aa571b8, type: 3}
+--- !u!50 &4489489708963464141
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1886205900924748448}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: 2341f0a972aef764e99614f2da6adfb4, type: 2}
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 1
+  m_Constraints: 7
